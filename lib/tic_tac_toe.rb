@@ -31,33 +31,33 @@ def move(board, input, char)
   board[input] = char
 end
 
-def position_taken?(board, index)
-  if board[index] == " " ||  board[index] == "" ||  board[index] == nil
+def position_taken?(index)
+  if @board[index] == " " ||  @board[index] == "" ||  @board[index] == nil
       return false
-  elsif board[index] == "X" ||  board[index] == "O"
+  elsif @board[index] == "X" ||  @board[index] == "O"
      return true
   end
 end
 
-def valid_move?(board, index)
-  index.between?(0,8) && !position_taken?(board, index)
+def valid_move?(index)
+  index.between?(0,8) && !position_taken?(index)
 end
 
-def turn(board) 
+def turn 
   puts "Please enter 1-9:"
   input = gets.chomp
   index = input_to_index(input)
-  if valid_move?(board, index) == true 
-    move(board, index, current_player(board))
-    display_board(board)
+  if valid_move?(index) == true 
+    move(index, current_player)
+    display_board
   else
-    turn(board)
+    turn
   end
 end
 
-def turn_count(board)
+def turn_count
   count = 0 
-  board.each do |input| 
+  @board.each do |input| 
     if input == "X" || input =="O"
       count += 1
     end
@@ -67,23 +67,23 @@ end
 
 
 
-def current_player(board)
-  if turn_count(board) % 2 == 0 
+def current_player
+  if turn_count % 2 == 0 
     return "X"
   else
     return "O"
   end
 end
 
-def won?(board) 
+def won?
   WIN_COMBINATIONS.each do |win_combination| 
     win_index_1 = win_combination[0]
     win_index_2 = win_combination[1]
     win_index_3 = win_combination[2]
     
-    position_1 = board[win_index_1]
-    position_2 = board[win_index_2]
-    position_3 = board[win_index_3]
+    position_1 = @board[win_index_1]
+    position_2 = @board[win_index_2]
+    position_3 = @board[win_index_3]
     
     if position_1 == "X" && position_2 == "X" && position_3 == "X" || position_1 == "O" && position_2 == "O" && position_3 == "O"
       return win_combination
@@ -94,37 +94,37 @@ end
  
 
 
-def full?(board)
-  board.none? {|input| input == "" || input == " "}
+def full?
+  @board.none? {|input| input == "" || input == " "}
 end
 
 
-def draw?(board)
-  !won?(board) && full?(board)
+def draw?
+  !won? && full?
 end
 
-def over?(board)
-  won?(board) || draw?(board)
+def over?
+  won? || draw?
 end
 
-def winner(board)
-  if won?(board)
-    puts board[won?(board)[0]] 
-    return board[won?(board)[0]] 
+def winner
+  if won?
+    puts @board[won?[0]] 
+    return @board[won?[0]] 
   else return nil
   end
 end
 
-def play(board)
+def play
   
-  until over?(board)
-    turn(board)
+  until over?
+    turn
     
   end
   
-  if won?(board)
-     puts "Congratulations #{winner(board)}!"
-  elsif draw?(board)
+  if won?
+     puts "Congratulations #{winner}!"
+  elsif draw?
       puts "Cat's Game!"
     end
 end
